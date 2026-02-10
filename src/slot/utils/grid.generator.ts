@@ -1,9 +1,9 @@
-import { createRng, type IRng } from '../utils/rng';
+import { createSeededRng, type IRng } from '../utils/rng';
 import type { Grid, ReelSymbol } from '../types/slot.type';
 import { SYMBOL_OBJ, SYMBOL_WAIGHTS } from '../constants/slot.const';
 
-export function generateGrid() {
-  const rng = createRng();
+export function generateGrid(seed: number): Grid {
+  const rng = createSeededRng(seed);
 
   const grid: Grid = [
     [pickSymbol(rng), pickSymbol(rng), pickSymbol(rng), pickSymbol(rng), pickSymbol(rng)],
