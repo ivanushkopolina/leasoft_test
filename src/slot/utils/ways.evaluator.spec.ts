@@ -1,4 +1,4 @@
-import { PAYTABLE, SYMBOL_OBJ } from '../constants/slot.const';
+import { PAYTABLE, SCATTER_PAYTABLE, SYMBOL_OBJ } from '../constants/slot.const';
 import type { Grid } from '../types/slot.type';
 import { evaluateWays } from './ways.evaluator';
 
@@ -15,7 +15,7 @@ describe('evaluateWays', () => {
     expect(result.wins.length).toBeGreaterThan(0);
     const aceWin = result.wins.find((w) => w.symbol === SYMBOL_OBJ.Ace && w.count === 5);
     expect(aceWin).toBeDefined();
-    expect(aceWin!.amount).toBe(100);
+    expect(aceWin!.amount).toBe(PAYTABLE[SYMBOL_OBJ.Ace][5]);
 
     expect(result.totalWin).toBeGreaterThan(0);
   });
@@ -43,7 +43,7 @@ describe('evaluateWays', () => {
     const scatterWin = result.wins.find((w) => w.symbol === SYMBOL_OBJ.Scatter);
     expect(scatterWin).toBeDefined();
     expect(scatterWin!.count).toBe(3);
-    expect(scatterWin!.amount).toBe(5);
+    expect(scatterWin!.amount).toBe(defaultBet * SCATTER_PAYTABLE[3]);
   });
 
   it('Wild substitutes for pay symbol', () => {

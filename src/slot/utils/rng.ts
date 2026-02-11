@@ -1,11 +1,15 @@
 export interface IRng {
-  nextFloat(): number;
+    nextInt(max: number): number;
+    nextFloat(): number;
 }
 
 
 export function createSeededRng(seed: number): IRng {
   let state = seed >>> 0;
   return {
+    nextInt(max: number): number {
+      return Math.floor(this.nextFloat() * max);
+    },
     nextFloat(): number {
       state = (state + 0x6d2b79f5) >>> 0;
       let t = state;

@@ -10,7 +10,7 @@ export function evaluateWays(grid: Grid, stakePerLine: number): WinResult {
     const mult = PAYTABLE[symbol]?.[count];
     if (mult) {
       const win = { symbol, count, amount: mult * stakePerLine, mult }
-      winCombinations.push({ ...win });
+      winCombinations.push(win);
       if(mult > (biggestWin?.mult ?? 0)) {
         biggestWin = win;
       }

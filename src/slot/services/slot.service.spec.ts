@@ -65,5 +65,26 @@ describe('SlotService', () => {
         });
       }
     });
+
+    it('RTP over many spins is within expected range (95–98%) for the same user', () => {
+      const stakePerSpin = 1;
+      const spinsCount = 10_000_000;
+      let totalPayout = 0;
+      let scatterWin = 0;
+
+
+      for (let i = 0; i < spinsCount; i++) {
+        const userId = i % 30;
+        const result = service.spin(userId, stakePerSpin);
+        totalPayout += result.totalWin;
+        scatterWin += result.scatterWin;
+      }
+
+      const totalStake = spinsCount * stakePerSpin;
+      const rtp = (totalPayout + scatterWin) / totalStake;
+
+      expect(rtp).toBeGreaterThanOrEqual(0.9);
+      expect(rtp).toBeLessThanOrEqual(1.0);
+    });
   });
 });

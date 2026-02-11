@@ -1,29 +1,24 @@
 import { createSeededRng, type IRng } from '../utils/rng';
 import type { Grid, ReelSymbol } from '../types/slot.type';
-import { SYMBOL_OBJ, SYMBOL_WAIGHTS } from '../constants/slot.const';
+import { REEL_STRIPS, REEL_STRIP_LENGTH, REELS_COUNT, ROWS_COUNT } from '../constants/slot.const';
 
 export function generateGrid(seed: number): Grid {
   const rng = createSeededRng(seed);
 
   const grid: Grid = [
-    [pickSymbol(rng), pickSymbol(rng), pickSymbol(rng), pickSymbol(rng), pickSymbol(rng)],
-    [pickSymbol(rng), pickSymbol(rng), pickSymbol(rng), pickSymbol(rng), pickSymbol(rng)],
-    [pickSymbol(rng), pickSymbol(rng), pickSymbol(rng), pickSymbol(rng), pickSymbol(rng)],
-  ];
+    ['', '', '', '', ''],
+    ['', '', '', '', ''],
+    ['', '', '', '', ''],
+  ] as Grid;
+
+  for (let reel = 0; reel < REELS_COUNT; reel++) {
+    const stop = rng.nextInt(REEL_STRIP_LENGTH);
+    const strip = REEL_STRIPS[reel];
+    for (let row = 0; row < ROWS_COUNT; row++) {
+      const index = (stop + row) % REEL_STRIP_LENGTH;
+      grid[row][reel] = strip[index] as ReelSymbol;
+    }
+  }
 
   return grid;
-}
-
-function pickSymbol(rng: IRng): ReelSymbol {
-  const symbols = Object.keys(SYMBOL_OBJ) as Array<keyof typeof SYMBOL_OBJ>;
-  const totalWeight = symbols.reduce((sum, key) => sum + SYMBOL_WAIGHTS[SYMBOL_OBJ[key]], 0);
-
-  let r = rng.nextFloat() * totalWeight;
-  
-  for (const key of symbols) {
-    const w = SYMBOL_WAIGHTS[SYMBOL_OBJ[key]];
-    r -= w;
-    if (r <= 0) return SYMBOL_OBJ[key] as ReelSymbol;
-  }
-  return SYMBOL_OBJ[symbols[symbols.length - 1]] as ReelSymbol;
 }
