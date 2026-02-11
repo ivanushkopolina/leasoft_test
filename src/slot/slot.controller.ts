@@ -13,8 +13,8 @@ export class SlotController {
 
   @Get('spin')
   spin(@Req() req: RequestWithUser, @Query() query: SpinQueryReqDto) {
-    const userId = req.user?.id;
-    const stakePerLine = query.stake ? Math.max(0, Number(query.stake)) : 1;
+    const userId = req.user?.id ?? 0;
+    const stakePerLine = query.stake ?? 1;
     return this.slotService.spin(userId, stakePerLine);
   }
 }
