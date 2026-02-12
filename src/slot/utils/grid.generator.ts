@@ -14,10 +14,10 @@ export function generateGrid(seed: number): Grid {
   for (let reel = 0; reel < REELS_COUNT; reel++) {
     const stop = rng.nextInt(REEL_STRIP_LENGTH);
     const strip = REEL_STRIPS[reel];
-    for (let row = 0; row < ROWS_COUNT; row++) {
-      const index = (stop + row) % REEL_STRIP_LENGTH;
-      grid[row][reel] = strip[index] as ReelSymbol;
-    }
+
+    grid[0][reel] = strip[(stop - 1) % REEL_STRIP_LENGTH] as ReelSymbol;
+    grid[1][reel] = strip[stop % REEL_STRIP_LENGTH] as ReelSymbol;
+    grid[2][reel] = strip[(stop + 1) % REEL_STRIP_LENGTH] as ReelSymbol;
   }
 
   return grid;

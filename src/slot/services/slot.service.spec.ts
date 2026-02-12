@@ -69,19 +69,44 @@ describe('SlotService', () => {
     it('RTP over many spins is within expected range for the same user', () => {
       const userId = 1;
       const stakePerSpin = 1;
-      const spinsCount = 50_000;
+      const spinsCount = 10_000_000;
       let totalPayout = 0;
+      let loseCount = 0;
+      const streakCounts: Record<string, Record<number, number>> = {};
 
       for (let i = 0; i < spinsCount; i++) {
         const result = service.spin(userId, stakePerSpin);
         totalPayout += result.totalWin;
+
+        for (const win of result.wins) {
+          if (!streakCounts[win.symbol]) {
+            streakCounts[win.symbol] = {};
+          }
+          if(result.totalWin === 0) loseCount++;
+          const byCount = streakCounts[win.symbol];
+          byCount[win.count] = (byCount[win.count] ?? 0) + 1;
+        }
       }
 
       const totalStake = spinsCount * stakePerSpin;
       const rtp = totalPayout / totalStake;
 
-      expect(rtp).toBeGreaterThanOrEqual(0.85);
-      expect(rtp).toBeLessThanOrEqual(1.05);
+
+      // Uncomment to see streak counts example: (
+      // A: {3: 123000, 4: 70000, 5: 6000}, 
+      // J: {3: 100000, 4: 50000, 5: 4000}, 
+      // Q: {3: 80000, 4: 40000, 5: 3000},
+      //  K: {3: 60000, 4: 30000, 5: 2000}, 
+      // 10: {3: 40000, 4: 20000, 5: 1000}, 
+      // W: {3: 20000, 4: 10000, 5: 500}, 
+      // S: {3: 10000, 4: 5000, 5: 250}})
+      // console.log('Streak counts:', streakCounts);
+
+      // log to see actual loses
+      expect(loseCount).toBeGreaterThan(300000);
+
+      expect(rtp).toBeGreaterThanOrEqual(0.93);
+      expect(rtp).toBeLessThanOrEqual(0.98);
     });
   });
 });
