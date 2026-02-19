@@ -1,49 +1,36 @@
-## Description
+# Slot (простий запуск)
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+Просте консольне застосунок без фреймворків: два скрипти — **run** (спіни з обмеженням) та **stats** (статистика з N спінів).
 
-## Installation
-
-```bash
-$ npm install
-```
-
-## Running the app
+## Скрипти
 
 ```bash
-# development
-$ npm run start
-
-# watch mode
-$ npm run start:dev
-
-# production mode
-$ npm run start:prod
+npm install
 ```
 
-## Test
+**run** — спін за спином з обмеженням кількості:
 
 ```bash
-# unit tests
-$ npm run test
-
-# e2e tests
-$ npm run test:e2e
-
-# test coverage
-$ npm run test:cov
+npm run run -- 1000
 ```
 
-## Support
+**stats** — N спінів, виводить загальну ставку, загальний виграш, RTP:
 
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
+```bash
+npm run stats -- 50000
+```
 
-## Stay in touch
+## Структура
 
-- Author - [Kamil Myśliwiec](https://kamilmysliwiec.com)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
+- `src/config.ts` — рил сет (number[][]), paytable по id, wild/scatter id.
+- `src/grid.ts` — побудова сітки: для кожного reel
+- `src/evaluate.ts` — ways-оцінка за symbol id.
+- `src/spin.ts` — один спін (grid + evaluate).
+- `src/run.ts` — скрипт run.
+- `src/stats.ts` — скрипт stats.
 
-## License
+## ID символів (в коментарях)
 
-Nest is [MIT licensed](LICENSE).
+- 1–5: платні символи
+- 6: wild
+- 7: scatter
